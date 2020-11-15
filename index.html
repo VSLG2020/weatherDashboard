@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--font awesome CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--bootstrap CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Weather Dashboard</title>
+</head>
+
+<body>
+    <!--<script src="https://code.jquery.com/jquery.js"></script>-->
+    <header>
+        <h1 class="title bg-dark text-light text-center">Weather Dashboard</h1>
+    </header>
+
+    <main>
+        <div class="row">
+            <div class="col md 4">
+                <div  class="searchContainer same-height-panel" style="padding-left: 10px">
+                    <h5 class="text-dark text-size medium">Search for a City</h5>
+                    <input id="userSearch" type="text"/>
+                <!--button-->
+                    <button class=" btn btn-primary" id="search-button"> <id class ="fa fa-search"></i></button>
+                    <!--button end-->
+                        <div class="card" style="width: 18rem;">
+                            <ul class="list-group list-group-flush" id="location"></ul>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div id="cardContainer">
+        </div>
+    </main>
+
+
+    <!-- script -->
+    <script src="./assets/js/script.js"></script>
+</body>
+
+</html>
