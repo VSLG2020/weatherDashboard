@@ -16,31 +16,74 @@
 <body>
     <!--<script src="https://code.jquery.com/jquery.js"></script>-->
     <header>
-        <h1 class="title bg-dark text-light text-center">Weather Dashboard</h1>
+        <h1 class="container-fluid text-center text-white bg-dark p-2">Weather Dashboard</h1>
     </header>
 
-    <main>
-        <div class="row">
-            <div class="col md 4">
-                <div  class="searchContainer same-height-panel" style="padding-left: 10px">
-                    <h5 class="text-dark text-size medium">Search for a City</h5>
-                    <input id="userSearch" type="text"/>
-                <!--button-->
-                    <button class=" btn btn-primary" id="search-button"> <id class ="fa fa-search"></i></button>
-                    <!--button end-->
-                        <div class="card" style="width: 18rem;">
-                            <ul class="list-group list-group-flush" id="location"></ul>
-                        </div>
-                </div>
+    <div class="conatiner-fluid d-flex">
+        <!-- creates a row -->
+        <!--main-->
+        <div class="searchContainer bg-light col-md-4 same-height-panel" style="padding-left: 10px">
+            <h5 class="text-dark text-size medium">Search for a City</h5>
+            <input id="userSearch" type="text" />
+            <!--button-->
+            <button class=" btn btn-primary" id="search-button">
+                <id class="fa fa-search"></i>
+            </button>
+            <!--button end-->
+            <div class="card" style="width: 18rem;">
+                <ul class="list-group list-group-flush" id="location"></ul>
             </div>
         </div>
-        <div id="cardContainer">
+
+        <div id="lastResults"></div>
+        <!-- weather container-->
+        <div class="weatherCard col-md-8 border" id="cardContainer">
+            <div id="card" class="card-body"></div>
+            <!--5 day forecast-->
+            <h5 style='padding-left: 15px'>5-Day Forecast</h5>
+            <div class="row" style="padding: 0; margin: 0; margin-top: 10px">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between" id="five-day-container">
+                        <!-- begining of cards -->
+                        <div class="card text-white bg-primary mb-3 col-2 mr-1" style="min-width: 9rem; height: 9rem">
+                            <h6 class="card-title text-center " id='date1'></h6>
+                            <p class="card-text" id='temp1'></p>
+                            <p class="card-text" id='humidity1'></p>
+                        </div>
+                        <div class="card text-white bg-primary mb-3 col-2 mr-1" style="min-width: 9rem; height: 9rem">
+                            <h6 class="card-title text-center " id='date2'></h6>
+                            <p class="card-text" id='temp2'></p>
+                            <p class="card-text" id='humidity2'></p>
+                        </div>
+                        <div class="card text-white bg-primary mb-3 col-2 mr-1" style="min-width: 9rem; height: 9rem">
+                            <h6 class="card-title text-center " id='date3'></h6>
+                            <p class="card-text" id='temp3'></p>
+                            <p class="card-text" id='humidity3'></p>
+                        </div>
+                        <div class="card text-white bg-primary mb-3 col-2 mr-1" style="min-width: 9rem; height: 9rem">
+                            <h6 class="card-title" id='date4'></h6>
+                            <p class="card-text" id='temp4'></p>
+                            <p class="card-text" id='humidity4'></p>
+                        </div>
+                        <div class="card text-white bg-primary mb-3 col-2 mr-1" style="min-width: 9rem; height: 9rem">
+                            <h6 class="card-title" id='date5'></h6>
+                            <p class="card-text" id='temp5'></p>
+                            <p class="card-text" id='humidity5'></p>
+                        </div>
+                        <!-- end of cards -->
+                    </div>
+                </div>
+            </div>
+            <!--end-->
         </div>
-    </main>
 
 
-    <!-- script -->
-    <script src="./assets/js/script.js"></script>
+        <!-- script -->
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="./assets/js/script.js"></script>
+
+
 </body>
 
 </html>

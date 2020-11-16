@@ -1,103 +1,240 @@
-var url = "https://api.openweathermap.org/data/2.5/weather?q=+London+&appid=e762dc2e2097711648842fa11d60d794"
+//weather api url
+var urlWeather = "https://api.openweathermap.org/data/2.5/weather?q=+London+&appid=e762dc2e2097711648842fa11d60d794"
+//long/lat/forecast url
+var urlOneCall ="https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&daily&exclude=hourly,minutely&units=imperial&appid=e762dc2e2097711648842fa11d60d794"
 
-// sends user and fetch request
-function searchUserInput() {
-  let searchInput = document.querySelector("#userSearch").value
-  fetchRequest(searchInput);
+// grab card container
+let cardContainerEl = document.querySelector("#cardContainer")
+
+// grab card
+let cardEl = document.querySelector("#card")
+ 
+// fetch request for the searchUserInput
+
+function searchUserInput(){
+    let searchInput = document.querySelector("#userSearch").value
+    fetchRequest(searchInput);
 }
 
-  //create list items in search card
-  function createListItem(data) {
-    //set id var
-    var idCounter = 0;
-    //create a button when function is called
-    var aEl = document.createElement('button');
-    //give created button an id of idCounter
-    aEl.setAttribute('id', data.name);
-    //give button a bootstrap class of list-group-item
-    aEl.setAttribute('class', 'list-group-item');
-    //set ulEl to the ul with id of #location from index.html
-    var ulEl = document.querySelector('#location');
-    //append aEl to ulEl
-    ulEl.appendChild(aEl);
-    //set text content of aEl to be the name of the location
-    aEl.textContent = data.name;
-    //add 1 to the id
-    idCounter++;
-  }
+// run searchUserInput on click
 
-//runs searchUserInput Api
-document.querySelector("#search-button").addEventListener('click', searchUserInput);
+document.querySelector("#search-button").addEventListener('click', searchUserInput)
 
-function fetchRequest(searchInput){
-  fetch('https://api.openweathermap.org/data/2.5/weather?q='
+// fetch from open weather API and  add .then function for a response. using json
+
+function fetchRequest(searchInput) {
+fetch('https://api.openweathermap.org/data/2.5/weather?q='
     + searchInput +
-    '&appid=e762dc2e2097711648842fa11d60d794')
-    .then(function (response) {
-      if (!response.ok) { // Request failed, go to catch
-        throw Error(response.statusText); // throw will stop execution of the promise chain and jump to catch
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      console.log(data);
-      createListItem(data);
-      displayRequest(data);
-    })
-    .catch(function (error) {
-      alert(error);
-    });
-  }
+    '&units=imperial&appid=e762dc2e2097711648842fa11d60d794')
+  .then(function (response) {
+    if (!response.ok) { // Request failed, go to catch
+      throw Error(response.statusText); // Execution of the current function will stop (the statements after throw won't be executed),
+    } // and control will be passed to the first catch block in the call stack
+    return response.json()
+  })
+  
+  .then(function (data) {      //data display and create list. 
+    createListItem(data)
+      displayName(data)
+    let coordinates = {
+        longitude:data.coord.lon,     //this adds the long/lat coordinates for the U.V 
+        latitude:data.coord.lat
+    };
+    return coordinates;
+    
+  })
+  
+  // pass coordinate object along
+  
+  .then(function(response){
+      console.log(response)
+      return fetch('https://api.openweathermap.org/data/2.5/onecall?lat='
+            + response.latitude + '&lon=' + response.longitude + '&daily&exclude=hourly,minutely&units=imperial&appid=e762dc2e2097711648842fa11d60d794')
+  })
+  // return response in JSON
+  .then (function(response){  
+    return response.json()
+  })
+  //consoloe log JSON response
+  .then (function(data){
+    displayRequest(data)
+    displayRequestBlue(data)
+    
+    //createListItem(data)
+  })
+  .catch(function (error) {
+    alert(error);
+  });
+}
+//end of the fetchRequest(searchInput)
 
+// fetch button for searchbutton
 
+function searchButton(buttonEl) {
+fetch('https://api.openweathermap.org/data/2.5/weather?q='
+    + buttonEl +
+    '&units=imperial&appid=e762dc2e2097711648842fa11d60d794')
+  .then(function (response) {
+    if (!response.ok) { // Request failed, go to catch
+      throw Error(response.statusText); // throw will stop execution of the promise chain and jump to catch
+    }
+    return response.json()
+  })
+  
+  .then(function (data) {
+      displayName(data)
+    let coordinates = {
+        longitude:data.coord.lon,
+        latitude:data.coord.lat
+    };
+    return coordinates;
+    
+  })
+  // pass coordinate object along
+  .then(function(response){
+      console.log(response)
+      return fetch('https://api.openweathermap.org/data/2.5/onecall?lat='
+            + response.latitude + '&lon=' + response.longitude + '&daily&exclude=hourly,minutely&units=imperial&appid=951ac77f9019903879e8df930449019e')
+  })
+  // return response in JSON
+  .then (function(response){  
+    return response.json()
+  })
+  //consoloe log JSON response
+  .then (function(data){
+    displayRequest(data)
+    displayRequestBlue(data)
+    
+    //createListItem(data)
+  })
+  .catch(function (error) {
+    alert(error);
+  });
+}
 
-  function displayRequest(data) {
+//fetch that will list data from searchbutton
+
+function createListItem(data){
+    var buttonEl = document.createElement('button'); //this is the button
+    buttonEl.setAttribute('id',data.name);//this is tht button id
+    buttonEl.setAttribute('class', 'list-group-item');//bootstrap list-group-item
+    buttonEl.setAttribute('onclick', `searchButton("${data.name}")`); 
+    var divEl = document.querySelector('#location'); //set ul(html list tag) to the ulEl (ul element) with id=location 
+    divEl.appendChild(buttonEl); //append buttonEl to ulEl
+    buttonEl.textContent = data.name; //data.name is now the 'location'
+}
+
+     
+
+// display function for the city name from current Weather url 
+function displayName(data){
+    let cityEl = document.createElement("h1") //cityname will be displayed
+    cardEl.innerHTML=" "
+    cityEl.textContent = data.name
+    cardEl.append(cityEl)
+}
+
+// display oneCall/forecast api data
+
+function displayRequest(data){
     console.log(data);
 
+    //this is the card for the forescast
 
-    var cardContainerEl = document.querySelector("#cardContainer")
-    // clear old content
-    cardContainerEl.innerHTML = "";
-    // create card 
-    var cardEl = document.createElement("div");
-    cardEl.classList = "card-body"
-    // create card content 
-
-
-
-    var h1El = document.createElement('h1');
-    h1El.textContent = data.name
-
-    // weather icon
+    // location/city date 
+    let dateEl = document.createElement('p')
+    dateEl.textContent = data.current.dt
+    
+    // little weather emoji/img on card
     let imgEl = document.createElement("img");
-    imgEl.setAttribute('src', 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png')
-    //temperature
+    imgEl.setAttribute('src', 'http://openweathermap.org/img/w/' + data.current.weather[0].icon + '.png')
+    
+    // pull the temperature end pioint
+   
     let tempEl = document.createElement('p');
-    tempEl.textContent = data.main.temp + "°"
-    //humidity
+    tempEl.textContent = data.current.temp + " °F"
+   
+    // pull the humidity end point
+   
     let humidityEl = document.createElement('p')
-    humidityEl.textContent.data.main.humidity
-    // append content to card
-    cardEl.append(h1El);
-    cardEl.append(imgEl);
-    cardEl.append(tempEl);
-    cardEl.append(humidityEl)
-
-
-    // append card to container
-    cardContainerEl.appendChild(cardEl);
-  }
-
-
-  function nameData() {
-    if (typeof(Storage) !== "undefined") {
-      if (sessionStorage.clickcount) {
-        sessionStorage.clickcount = Number(sessionStorage.clickcount)+1;
-      } else {
-        sessionStorage.clickcount = 1;
+    humidityEl.textContent = data.current.humidity + "%"
+    
+    // pull wind speed end point
+    
+    let windEl = document.createElement('p')
+    windEl.textContent = data.current.wind_speed + " mph"
+   
+    // pull uv index endpoint
+    
+    let uvEl = document.createElement('p')
+    uvEl.textContent = data.current.uvi
+    if(data.current.uvi > 5){
+      uvEl.setAttribute('class', 'bg-danger'); //greater than 5 is danger zone
       }
-      document.getElementById("result").innerHTML = "You have clicked the button " + sessionStorage.clickcount + " time(s) in this session.";
-    } else {
-      document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
-    }
+      else if (data.current.uvi>=3){
+        uvEl.setAttribute('class', 'bg-warning'); //greater than equal to 3 is warning
+      } else{
+        uvEl.setAttribute('class', 'bg-success'); // everything else or less than 3 is "good/green"
+      }
+      uvEl.setAttribute("style", "width:fit-content; padding:0px 10px 0px")
+    
+      
+    
+    cardEl.append(dateEl); //this is date append
+    cardEl.append(imgEl); //this is the image ""
+    cardEl.append(tempEl); //temp append
+    cardEl.append(humidityEl) //humidity ""
+    cardEl.append(windEl); // wind speed ""
+    cardEl.append(uvEl) // uv ""
+    
+    
   }
+   
+function displayRequestBlue(data){
+    console.log(data);
+   
+   
+    // create card content
+    
+    
+    // city and date pulled for 5 day forecast
+
+    let date1 = document.getElementById('date1')
+    date1.textContent = data.daily[0].dt
+    let date2 = document.getElementById('date2')
+    date2.textContent = data.daily[1].dt
+    let date3 = document.getElementById('date3')
+    date3.textContent = data.daily[2].dt
+    let date4 = document.getElementById('date4')
+    date4.textContent = data.daily[3].dt
+    let date5 = document.getElementById('date5')
+    date5.textContent = data.daily[4].dt
+    
+    
+    // temperature card for 5 day forecast
+
+    let temp1 = document.getElementById('temp1')
+    temp1.textContent = data.daily[0].temp.day + "°F"
+    let temp2 = document.getElementById('temp2')
+    temp2.textContent = data.daily[1].temp.day + "°F"
+    let temp3 = document.getElementById('temp3')
+    temp3.textContent = data.daily[2].temp.day + "°F"
+    let temp4 = document.getElementById('temp4')
+    temp4.textContent = data.daily[3].temp.day + "°F"
+    let temp5 = document.getElementById('temp5')
+    temp5.textContent = data.daily[4].temp.day + "°F"
+    
+    // humidity card for the 5 day forecast
+
+    let humidity1 = document.getElementById('humidity1')
+    humidity1.textContent = data.daily[0].humidity + "%"
+    let humidity2 = document.getElementById('humidity2')
+    humidity2.textContent = data.daily[1].humidity + "%"
+    let humidity3 = document.getElementById('humidity3')
+    humidity3.textContent = data.daily[2].humidity + "%"
+    let humidity4 = document.getElementById('humidity4')
+    humidity4.textContent = data.daily[3].humidity + "%"
+    let humidity5 = document.getElementById('humidity5')
+    humidity5.textContent = data.daily[4].humidity + "%"
+}
+  
